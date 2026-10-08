@@ -15,6 +15,7 @@ import {
   selector: 'app-summary-panel',
   standalone: true,
   templateUrl: './summary-panel.html',
+  styleUrl: './summary-panel.css',
 })
 export class SummaryPanel {
   readonly project = input.required<Project>();

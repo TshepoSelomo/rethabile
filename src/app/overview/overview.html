@@ -1,0 +1,59 @@
+<div class="overview">
+  <div class="overview-form">
+    <section class="section" aria-labelledby="plp-current">
+      <header>
+        <h2 id="plp-current">Current PLP phase</h2>
+      </header>
+      <label class="field">
+        <span class="sr">Phase</span>
+        <select [value]="state.currentPhase()?.id ?? ''" (change)="state.onPhaseSelect($event)">
+          <option value="" disabled>Select a phase</option>
+          @for (phase of state.phases; track phase.id; let index = $index) {
+            <option [value]="phase.id" [selected]="phase.id === state.currentPhase()?.id">
+              {{ state.phaseOptionLabel(index) }}
+            </option>
+          }
+        </select>
+      </label>
+      <p class="hint">
+        @if (state.currentPhase(); as phase) {
+          Weight {{ phase.weight }}%. This phase is marked In Progress. Earlier phases become Complete.
+        } @else {
+          No phase is in progress.
+        }
+      </p>
+      <app-number-field
+        label="% of the current phase"
+        [value]="state.form().progressPercent"
+        [max]="100"
+        (valueChange)="state.setProgress($event)"
+      />
+    </section>
+
+    <section class="section" aria-labelledby="stage-current">
+      <header>
+        <h2 id="stage-current">Current procurement stage</h2>
+      </header>
+      <label class="field">
+        <span class="sr">Stage</span>
+        <select [value]="state.currentStage()?.id ?? ''" (change)="state.onStageSelect($event)">
+          <option value="" disabled>Select a stage</option>
+          @for (stage of state.stages; track stage.id) {
+            <option [value]="stage.id" [selected]="stage.id === state.currentStage()?.id">
+              {{ stage.name }}
+            </option>
+          }
+        </select>
+      </label>
+      <p class="hint">Pre-BSC through Award. The chosen stage is marked In Progress.</p>
+    </section>
+  </div>
+
+  <app-summary-panel
+    [project]="state.project()"
+    [month]="state.month()"
+    [form]="state.form()"
+    [progress]="state.progress()"
+    [balance]="state.balance()"
+  />
+</div>

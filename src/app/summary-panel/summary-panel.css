@@ -1,0 +1,72 @@
+:host { display: block; }
+
+.summary {
+  position: relative;
+  overflow: hidden;
+  background: white;
+  color: #0a1628;
+  border: 1px solid #e4eef3;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: 20px 22px 22px;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.summary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(165deg, #00a8e3, #0088c2 42%, #006992);
+}
+
+.summary .eyebrow { color: #8aa0b0; }
+.summary h2 { font-weight: 800; font-size: 1.25rem; letter-spacing: -0.3px; }
+.summary-kicker { color: #8aa0b0; font-size: 13px; font-weight: 500; }
+
+.progress-value {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  color: #006992;
+}
+
+.story { color: #5e6772; font-size: 13px; line-height: 1.45; }
+
+.weight-bar {
+  display: flex;
+  gap: 3px;
+  height: 8px;
+  margin: 6px 0 2px;
+}
+
+.weight-bar > span {
+  background: #e7f4fa;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.weight-bar > span > span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #00a8e3, #006992);
+}
+
+.summary-list { margin: 8px 0 0; display: grid; gap: 0; }
+
+.summary-list div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 10px 0;
+  border-top: 1px solid #eef4f8;
+}
+
+.summary-list dt { color: #8aa0b0; font-size: 13px; }
+.summary-list dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.summary-list small { display: block; color: #8aa0b0; font-size: 12px; font-weight: 500; }
+.summary-list .over { color: var(--danger); }

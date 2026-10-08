@@ -1,0 +1,21 @@
+<section class="section" aria-labelledby="sec-jobs">
+  <header>
+    <h2 id="sec-jobs">Jobs</h2>
+  </header>
+  <div class="fields">
+    <app-number-field label="Planned jobs" [value]="state.form().jobs.planned" (valueChange)="state.setJob('planned', $event)" />
+    <app-number-field
+      label="Jobs created to date"
+      [value]="state.form().jobs.createdToDate"
+      (valueChange)="state.setJob('createdToDate', $event)"
+    />
+    <app-number-field
+      label="Jobs this month"
+      [value]="state.form().jobs.thisMonth"
+      (valueChange)="state.setJob('thisMonth', $event)"
+    />
+    <app-number-field label="Local jobs" [value]="state.form().jobs.local" (valueChange)="state.setJob('local', $event)" />
+    <app-number-field label="Youth jobs" [value]="state.form().jobs.youth" (valueChange)="state.setJob('youth', $event)" />
+    <app-number-field label="Women jobs" [value]="state.form().jobs.women" (valueChange)="state.setJob('women', $event)" />
+  </div>
+</section>

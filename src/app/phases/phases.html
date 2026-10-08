@@ -1,0 +1,10 @@
+<app-track-section
+  number="06"
+  title="PLP phases"
+  headingId="sec-plp"
+  [rows]="state.form().phases"
+  nameLabel="Phase"
+  [showWeight]="true"
+  hint="Marking a phase In Progress sets it as the current phase. Earlier phases become Complete."
+  (changed)="state.onPhaseChange($event)"
+/>

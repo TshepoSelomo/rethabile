@@ -1,17 +1,19 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { DEMO_ACCOUNTS, PLP_PHASES } from '../data/model';
-import { authenticate, resetPassword, type SessionUser } from '../data/store';
+import { Router } from '@angular/router';
+import { DEMO_ACCOUNTS } from '../data/model';
+import { authenticate, resetPassword } from '../data/store';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   templateUrl: './login.html',
+  styleUrl: './login.css',
 })
 export class Login {
   private readonly title = inject(Title);
+  private readonly router = inject(Router);
 
-  protected readonly phases = PLP_PHASES;
   protected readonly accounts = DEMO_ACCOUNTS;
   protected readonly mode = signal<'sign-in' | 'reset'>('sign-in');
   protected readonly email = signal(DEMO_ACCOUNTS[0].email);
@@ -21,8 +23,7 @@ export class Login {
   protected readonly error = signal('');
   protected readonly notice = signal('');
   protected readonly busy = signal(false);
-
-  readonly signedIn = output<SessionUser>();
+  protected readonly showPassword = signal(false);
 
   constructor() {
     this.title.setTitle('PRASA — Monthly returns');
@@ -42,6 +43,10 @@ export class Login {
 
   protected setConfirm(event: Event) {
     this.confirm.set(inputValue(event));
+  }
+
+  protected togglePassword() {
+    this.showPassword.update((open) => !open);
   }
 
   protected showReset() {
@@ -72,7 +77,7 @@ export class Login {
         );
         return;
       }
-      this.signedIn.emit(user);
+      void this.router.navigate(['/overview']);
     } finally {
       this.busy.set(false);
     }

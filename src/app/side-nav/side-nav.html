@@ -1,23 +1,31 @@
-<aside class="sidenav">
-  <div class="sidenav-brand">
-    <img class="logo logo-bar" src="prasa-logo.svg" alt="PRASA" />
+<aside class="side-nav">
+  <div class="nav-brand">
+    <div class="logo-plate">
+      <img class="logo-bar" src="prasa-logo.svg" alt="PRASA" />
+    </div>
+    <div class="brand-copy">
+      <strong>Monthly returns</strong>
+      <span>PRASA</span>
+    </div>
   </div>
-  <nav class="sidenav-nav" aria-label="Return sections">
-    @for (item of items; track item.id) {
-      <button
-        type="button"
-        class="nav-item"
-        [class.active]="section() === item.id"
-        [attr.aria-current]="section() === item.id ? 'page' : null"
-        (click)="sectionChange.emit(item.id)"
-      >
+
+  <nav class="nav-menu" aria-label="Return sections">
+    @for (item of items; track item.path) {
+      <a class="nav-link" [routerLink]="item.path" routerLinkActive="active">
         <span class="nav-index">{{ item.index }}</span>
-        {{ item.label }}
-      </button>
+        <span>{{ item.label }}</span>
+      </a>
     }
   </nav>
-  <div class="sidenav-foot">
-    <span>{{ userName() }}</span>
-    <button type="button" class="text-btn" (click)="signedOut.emit()">Sign out</button>
+
+  <div class="nav-footer">
+    <div class="user-profile">
+      <div class="avatar" aria-hidden="true">{{ initials() }}</div>
+      <div class="user-info">
+        <p class="user-name">{{ userName() }}</p>
+        <p class="user-role">Project manager</p>
+      </div>
+    </div>
+    <button type="button" class="sign-out" (click)="leave()">Sign out</button>
   </div>
 </aside>

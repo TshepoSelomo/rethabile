@@ -1,0 +1,36 @@
+<section class="section" aria-labelledby="sec-fin">
+  <header>
+    <h2 id="sec-fin">Amounts for this month</h2>
+  </header>
+  <div class="fields">
+    <app-number-field
+      label="Approved budget (R)"
+      [value]="state.form().financials.approvedBudget"
+      (valueChange)="state.setFinancial('approvedBudget', $event)"
+    />
+    <app-number-field
+      label="Expenditure to date (R)"
+      [value]="state.form().financials.expenditureToDate"
+      (valueChange)="state.setFinancial('expenditureToDate', $event)"
+    />
+    <app-number-field
+      label="Expenditure this month (R)"
+      [value]="state.form().financials.expenditureThisMonth"
+      (valueChange)="state.setFinancial('expenditureThisMonth', $event)"
+    />
+    <app-number-field
+      label="Commitments (R)"
+      [value]="state.form().financials.commitments"
+      (valueChange)="state.setFinancial('commitments', $event)"
+    />
+    <app-number-field
+      label="Forecast to complete (R)"
+      [value]="state.form().financials.forecastToComplete"
+      (valueChange)="state.setFinancial('forecastToComplete', $event)"
+    />
+    <label class="field">
+      <span>Balance (budget − spend to date)</span>
+      <input readonly [value]="state.formatMoney(state.balance())" />
+    </label>
+  </div>
+</section>

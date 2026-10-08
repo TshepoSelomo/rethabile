@@ -1,24 +1,20 @@
 <div class="workspace">
-  <app-side-nav
-    [section]="section()"
-    [userName]="user().name"
-    (sectionChange)="section.set($event)"
-    (signedOut)="signedOut.emit()"
-  />
+  <app-side-nav [userName]="state.userName" />
 
   <div class="workspace-main">
     <header class="workspace-bar">
       <div class="workspace-title">
-        <p class="eyebrow">{{ pageTitle() }}</p>
-        <h1>{{ project().name }}</h1>
-        <p class="context">{{ project().code }} · {{ formatMonth(month()) }}</p>
+        <p class="crumb">Monthly returns <span>/</span> {{ state.pageTitle() }}</p>
+        <h1>{{ state.project().name }} <small>{{ state.project().code }}</small></h1>
+        <p class="context">{{ state.formatMonth(state.month()) }}</p>
       </div>
+      <div class="workspace-tools">
       <div class="context-pickers">
         <label class="field">
           <span>Project</span>
-          <select #projectSelect [value]="projectId()" (change)="onProject($event)">
-            @for (item of projects(); track item.id) {
-              <option [value]="item.id" [selected]="item.id === projectId()">
+          <select #projectSelect [value]="state.projectId()" (change)="onProject($event)">
+            @for (item of state.projects(); track item.id) {
+              <option [value]="item.id" [selected]="item.id === state.projectId()">
                 {{ item.code }} · {{ item.name }}
               </option>
             }
@@ -26,267 +22,28 @@
         </label>
         <label class="field">
           <span>Month</span>
-          <input #monthInput type="month" [value]="month()" (change)="onMonth($event)" />
+          <input #monthInput type="month" [value]="state.month()" (change)="onMonth($event)" />
         </label>
       </div>
       <div class="workspace-actions">
-        <p role="status">{{ statusLine() }}</p>
-        <button type="button" class="btn" (click)="persist('draft')">Save draft</button>
-        <button type="button" class="btn btn-primary" (click)="persist('submitted')">Submit</button>
+        <p role="status">{{ state.statusLine() }}</p>
+        <button type="button" class="btn" (click)="state.persist('draft')">Save draft</button>
+        <button type="button" class="btn btn-primary" (click)="state.persist('submitted')">Submit</button>
+      </div>
       </div>
     </header>
 
-    @if (pending()) {
+    @if (state.pending()) {
       <div class="pending" role="alert">
         <p>This return has unsaved changes.</p>
         <div>
-          <button type="button" class="btn btn-primary" (click)="saveAndContinue()">Save draft</button>
-          <button type="button" class="btn" (click)="discardPending()">Discard</button>
+          <button type="button" class="btn btn-primary" (click)="state.saveAndContinue()">Save draft</button>
+          <button type="button" class="btn" (click)="state.discardPending()">Discard</button>
           <button type="button" class="btn" (click)="keepEditing()">Keep editing</button>
         </div>
       </div>
     }
 
-    @switch (section()) {
-      @case ('overview') {
-        <div class="overview">
-          <div class="overview-form">
-            <section class="section" aria-labelledby="plp-current">
-              <header>
-                <h2 id="plp-current">Current PLP phase</h2>
-              </header>
-              <label class="field">
-                <span class="sr">Phase</span>
-                <select [value]="currentPhase()?.id ?? ''" (change)="onPhaseSelect($event)">
-                  <option value="" disabled>Select a phase</option>
-                  @for (phase of phases; track phase.id; let index = $index) {
-                    <option [value]="phase.id" [selected]="phase.id === currentPhase()?.id">
-                      {{ phaseOptionLabel(index) }}
-                    </option>
-                  }
-                </select>
-              </label>
-              <p class="hint">
-                @if (currentPhase(); as phase) {
-                  Weight {{ phase.weight }}%. This phase is marked In Progress. Earlier phases become Complete.
-                } @else {
-                  No phase is in progress.
-                }
-              </p>
-              <app-number-field
-                label="% of the current phase"
-                [value]="form().progressPercent"
-                [max]="100"
-                (valueChange)="setProgress($event)"
-              />
-            </section>
-
-            <section class="section" aria-labelledby="stage-current">
-              <header>
-                <h2 id="stage-current">Current procurement stage</h2>
-              </header>
-              <label class="field">
-                <span class="sr">Stage</span>
-                <select [value]="currentStage()?.id ?? ''" (change)="onStageSelect($event)">
-                  <option value="" disabled>Select a stage</option>
-                  @for (stage of stages; track stage.id) {
-                    <option [value]="stage.id" [selected]="stage.id === currentStage()?.id">
-                      {{ stage.name }}
-                    </option>
-                  }
-                </select>
-              </label>
-              <p class="hint">Pre-BSC through Award. The chosen stage is marked In Progress.</p>
-            </section>
-          </div>
-
-          <app-summary-panel
-            [project]="project()"
-            [month]="month()"
-            [form]="form()"
-            [progress]="progress()"
-            [balance]="balance()"
-          />
-        </div>
-      }
-
-      @case ('financials') {
-        <section class="section" aria-labelledby="sec-fin">
-          <header>
-            <h2 id="sec-fin">Amounts for this month</h2>
-          </header>
-          <div class="fields-2">
-            <app-number-field
-              label="Approved budget (R)"
-              [value]="form().financials.approvedBudget"
-              (valueChange)="setFinancial('approvedBudget', $event)"
-            />
-            <app-number-field
-              label="Expenditure to date (R)"
-              [value]="form().financials.expenditureToDate"
-              (valueChange)="setFinancial('expenditureToDate', $event)"
-            />
-            <app-number-field
-              label="Expenditure this month (R)"
-              [value]="form().financials.expenditureThisMonth"
-              (valueChange)="setFinancial('expenditureThisMonth', $event)"
-            />
-            <app-number-field
-              label="Commitments (R)"
-              [value]="form().financials.commitments"
-              (valueChange)="setFinancial('commitments', $event)"
-            />
-            <app-number-field
-              label="Forecast to complete (R)"
-              [value]="form().financials.forecastToComplete"
-              (valueChange)="setFinancial('forecastToComplete', $event)"
-            />
-            <label class="field">
-              <span>Balance (budget − spend to date)</span>
-              <input readonly [value]="formatMoney(balance())" />
-            </label>
-          </div>
-        </section>
-      }
-
-      @case ('jobs') {
-        <section class="section" aria-labelledby="sec-jobs">
-          <header>
-            <h2 id="sec-jobs">Jobs</h2>
-          </header>
-          <div class="fields-3">
-            <app-number-field
-              label="Planned jobs"
-              [value]="form().jobs.planned"
-              (valueChange)="setJob('planned', $event)"
-            />
-            <app-number-field
-              label="Jobs created to date"
-              [value]="form().jobs.createdToDate"
-              (valueChange)="setJob('createdToDate', $event)"
-            />
-            <app-number-field
-              label="Jobs this month"
-              [value]="form().jobs.thisMonth"
-              (valueChange)="setJob('thisMonth', $event)"
-            />
-            <app-number-field
-              label="Local jobs"
-              [value]="form().jobs.local"
-              (valueChange)="setJob('local', $event)"
-            />
-            <app-number-field
-              label="Youth jobs"
-              [value]="form().jobs.youth"
-              (valueChange)="setJob('youth', $event)"
-            />
-            <app-number-field
-              label="Women jobs"
-              [value]="form().jobs.women"
-              (valueChange)="setJob('women', $event)"
-            />
-          </div>
-        </section>
-      }
-
-      @case ('milestones') {
-        <section class="section" aria-labelledby="sec-miles">
-          <header class="section-head">
-            <h2 id="sec-miles">Milestones</h2>
-            <button type="button" class="btn" (click)="addMilestone()">Add milestone</button>
-          </header>
-          @if (form().milestones.length === 0) {
-            <p class="hint">No milestones for this month yet.</p>
-          } @else {
-            <div class="table-wrap">
-              <table class="sheet">
-                <thead>
-                  <tr>
-                    <th>Milestone</th>
-                    <th>Planned</th>
-                    <th>Actual</th>
-                    <th>Status</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @for (milestone of form().milestones; track milestone.id) {
-                    <tr>
-                      <td>
-                        <input
-                          class="milestone-name"
-                          aria-label="Milestone name"
-                          [value]="milestone.name"
-                          (input)="onMilestoneName(milestone.id, $event)"
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="date"
-                          aria-label="Planned date"
-                          [value]="milestone.planned"
-                          (input)="onMilestoneDate(milestone.id, 'planned', $event)"
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="date"
-                          aria-label="Actual date"
-                          [value]="milestone.actual"
-                          (input)="onMilestoneDate(milestone.id, 'actual', $event)"
-                        />
-                      </td>
-                      <td>
-                        <select
-                          aria-label="Milestone status"
-                          [value]="milestone.status"
-                          (change)="onMilestoneStatus(milestone.id, $event)"
-                        >
-                          @for (status of milestoneStatuses; track status) {
-                            <option [value]="status" [selected]="status === milestone.status">
-                              {{ status }}
-                            </option>
-                          }
-                        </select>
-                      </td>
-                      <td>
-                        <button type="button" class="text-btn" (click)="removeMilestone(milestone.id)">
-                          Remove
-                        </button>
-                      </td>
-                    </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
-          }
-        </section>
-      }
-
-      @case ('procurement') {
-        <app-track-section
-          number="05"
-          title="Procurement stages"
-          headingId="sec-proc"
-          [rows]="form().stages"
-          nameLabel="Stage"
-          hint="Pre-BSC through Award. Marking a stage In Progress sets it as the current stage."
-          (changed)="onStageChange($event)"
-        />
-      }
-
-      @case ('phases') {
-        <app-track-section
-          number="06"
-          title="PLP phases"
-          headingId="sec-plp"
-          [rows]="form().phases"
-          nameLabel="Phase"
-          [showWeight]="true"
-          hint="Marking a phase In Progress sets it as the current phase. Earlier phases become Complete."
-          (changed)="onPhaseChange($event)"
-        />
-      }
-    }
+    <router-outlet />
   </div>
 </div>

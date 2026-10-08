@@ -1,0 +1,9 @@
+<app-track-section
+  number="05"
+  title="Procurement stages"
+  headingId="sec-proc"
+  [rows]="state.form().stages"
+  nameLabel="Stage"
+  hint="Pre-BSC through Award. Marking a stage In Progress sets it as the current stage."
+  (changed)="state.onStageChange($event)"
+/>

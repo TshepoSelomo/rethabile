@@ -1,0 +1,67 @@
+<section class="section" aria-labelledby="sec-miles">
+  <header class="section-head">
+    <h2 id="sec-miles">Milestones</h2>
+    <button type="button" class="btn" (click)="state.addMilestone()">Add milestone</button>
+  </header>
+  @if (state.form().milestones.length === 0) {
+    <p class="hint">No milestones for this month yet.</p>
+  } @else {
+    <div class="table-wrap">
+      <table class="sheet">
+        <thead>
+          <tr>
+            <th>Milestone</th>
+            <th>Planned</th>
+            <th>Actual</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (milestone of state.form().milestones; track milestone.id) {
+            <tr>
+              <td>
+                <input
+                  class="milestone-name"
+                  aria-label="Milestone name"
+                  [value]="milestone.name"
+                  (input)="state.onMilestoneName(milestone.id, $event)"
+                />
+              </td>
+              <td>
+                <input
+                  type="date"
+                  aria-label="Planned date"
+                  [value]="milestone.planned"
+                  (input)="state.onMilestoneDate(milestone.id, 'planned', $event)"
+                />
+              </td>
+              <td>
+                <input
+                  type="date"
+                  aria-label="Actual date"
+                  [value]="milestone.actual"
+                  (input)="state.onMilestoneDate(milestone.id, 'actual', $event)"
+                />
+              </td>
+              <td>
+                <select
+                  aria-label="Milestone status"
+                  [value]="milestone.status"
+                  (change)="state.onMilestoneStatus(milestone.id, $event)"
+                >
+                  @for (status of state.milestoneStatuses; track status) {
+                    <option [value]="status" [selected]="status === milestone.status">{{ status }}</option>
+                  }
+                </select>
+              </td>
+              <td>
+                <button type="button" class="text-btn" (click)="state.removeMilestone(milestone.id)">Remove</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

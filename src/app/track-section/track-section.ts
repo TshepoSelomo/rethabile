@@ -5,6 +5,7 @@ import { TRACK_STATUSES, statusSlug, type TrackRow, type TrackStatus } from '../
   selector: 'app-track-section',
   standalone: true,
   templateUrl: './track-section.html',
+  styleUrl: './track-section.css',
 })
 export class TrackSection {
   readonly number = input.required<string>();

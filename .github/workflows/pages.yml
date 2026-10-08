@@ -28,7 +28,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Build
-        run: npx ng build --base-href /rethabile/
+        run: npx ng build --base-href /rethabile/ && cp dist/rethabile/browser/index.html dist/rethabile/browser/404.html
       - name: Upload the site
         uses: actions/upload-pages-artifact@v3
         with:

@@ -4,6 +4,7 @@ import { Component, input, output } from '@angular/core';
   selector: 'app-number-field',
   standalone: true,
   templateUrl: './number-field.html',
+  styleUrl: './number-field.css',
 })
 export class NumberField {
   readonly label = input.required<string>();
