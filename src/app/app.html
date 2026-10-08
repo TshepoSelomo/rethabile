@@ -1,0 +1,5 @@
+@if (user(); as current) {
+  <app-capture [user]="current" (signedOut)="signedOut()" />
+} @else {
+  <app-login (signedIn)="signedIn($event)" />
+}

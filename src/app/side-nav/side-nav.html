@@ -1,0 +1,23 @@
+<aside class="sidenav">
+  <div class="sidenav-brand">
+    <img class="logo logo-bar" src="prasa-logo.svg" alt="PRASA" />
+  </div>
+  <nav class="sidenav-nav" aria-label="Return sections">
+    @for (item of items; track item.id) {
+      <button
+        type="button"
+        class="nav-item"
+        [class.active]="section() === item.id"
+        [attr.aria-current]="section() === item.id ? 'page' : null"
+        (click)="sectionChange.emit(item.id)"
+      >
+        <span class="nav-index">{{ item.index }}</span>
+        {{ item.label }}
+      </button>
+    }
+  </nav>
+  <div class="sidenav-foot">
+    <span>{{ userName() }}</span>
+    <button type="button" class="text-btn" (click)="signedOut.emit()">Sign out</button>
+  </div>
+</aside>

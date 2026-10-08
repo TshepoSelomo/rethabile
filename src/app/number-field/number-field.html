@@ -1,0 +1,12 @@
+<label class="field">
+  <span>{{ label() }}</span>
+  <input
+    type="number"
+    inputmode="decimal"
+    min="0"
+    [attr.max]="max()"
+    [value]="value()"
+    (wheel)="onWheel($event)"
+    (input)="onInput($event)"
+  />
+</label>

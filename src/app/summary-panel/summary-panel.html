@@ -1,0 +1,60 @@
+<aside class="summary" aria-label="Return summary">
+  <p class="eyebrow">{{ project().code }}</p>
+  <h2>{{ formatMonth(month()) }}</h2>
+  <p class="summary-kicker">Overall progress</p>
+  <p class="progress-value">{{ formatPercent(progress().total) }}</p>
+  <div
+    class="weight-bar"
+    role="img"
+    [attr.aria-label]="'Overall progress ' + formatPercent(progress().total)"
+  >
+    @for (phase of form().phases; track phase.id) {
+      <span [style.flex]="phase.weight ?? 1" [attr.title]="phase.name + ' ' + phase.weight + '%'">
+        <span [style.width.%]="phaseFill(phase)"></span>
+      </span>
+    }
+  </div>
+  <p class="story">{{ progressStory(form().phases, progress()) }}</p>
+
+  <dl class="summary-list">
+    <div>
+      <dt>PLP phase</dt>
+      <dd>{{ currentPhase() ? currentPhase()!.name : 'None in progress' }}</dd>
+    </div>
+    <div>
+      <dt>Procurement stage</dt>
+      <dd>{{ currentStage() ? currentStage()!.name : 'None in progress' }}</dd>
+    </div>
+    <div>
+      <dt>Spend to date</dt>
+      <dd>
+        {{ formatMoney(form().financials.expenditureToDate) }}
+        <small>of {{ formatMoney(form().financials.approvedBudget) }} approved</small>
+      </dd>
+    </div>
+    <div>
+      <dt>This month</dt>
+      <dd>{{ formatMoney(form().financials.expenditureThisMonth) }}</dd>
+    </div>
+    <div>
+      <dt>Balance</dt>
+      <dd [class.over]="balance() < 0">{{ formatMoney(balance()) }}</dd>
+    </div>
+    <div>
+      <dt>Jobs this month</dt>
+      <dd>{{ form().jobs.thisMonth }}</dd>
+    </div>
+    <div>
+      <dt>Return</dt>
+      <dd>
+        {{ form().status === 'submitted' ? 'Submitted' : 'Draft' }}
+        @if (form().submittedBy) {
+          <small>by {{ form().submittedBy }}</small>
+        }
+        @if (form().submittedAt) {
+          <small>{{ formatWhen(form().submittedAt) }}</small>
+        }
+      </dd>
+    </div>
+  </dl>
+</aside>

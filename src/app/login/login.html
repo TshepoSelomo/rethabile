@@ -1,0 +1,123 @@
+<main class="login">
+  <section class="brand" aria-label="About PRASA">
+    <div class="logo-plate">
+      <img class="logo" src="prasa-logo.svg" alt="PRASA, Passenger Rail Agency of South Africa" />
+    </div>
+    <h1>Monthly project returns</h1>
+    <p class="brand-copy">
+      Record the PLP phase, procurement stage, spend, jobs and milestones for each project, once a month.
+    </p>
+    <ol class="weight-list">
+      @for (phase of phases; track phase.id; let index = $index) {
+        <li>
+          <span>
+            Phase {{ index + 1 }}
+            <small>{{ phase.name }}</small>
+          </span>
+          <strong>{{ phase.weight }}%</strong>
+        </li>
+      }
+    </ol>
+  </section>
+
+  <section class="login-panel">
+    @if (mode() === 'sign-in') {
+      <form class="login-card" (submit)="onSignIn($event)">
+        <p class="eyebrow">Project managers</p>
+        <h2>Sign in</h2>
+        <p class="lede">
+          The demo account is filled in. Press Sign in, or replace it with another person on the list.
+        </p>
+
+        <label class="field">
+          <span>Email</span>
+          <input
+            type="email"
+            autocomplete="username"
+            [value]="email()"
+            (input)="setEmail($event)"
+            required
+          />
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input
+            type="password"
+            autocomplete="current-password"
+            [value]="password()"
+            (input)="setPassword($event)"
+            required
+          />
+        </label>
+
+        @if (error()) {
+          <p class="form-error" role="alert">{{ error() }}</p>
+        }
+        @if (notice()) {
+          <p class="form-note" role="status">{{ notice() }}</p>
+        }
+
+        <button class="btn btn-primary" type="submit" [disabled]="busy()">
+          {{ busy() ? 'Signing in…' : 'Sign in' }}
+        </button>
+        <button class="text-btn" type="button" (click)="showReset()">Forgot password</button>
+
+        <div class="account-list">
+          <p>Accounts on this device</p>
+          <ul>
+            @for (account of accounts; track account.id) {
+              <li>
+                <strong>{{ account.name }}</strong>
+                <span>{{ account.email }}</span>
+                <span>Password {{ account.password }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+      </form>
+    } @else {
+      <form class="login-card" (submit)="onReset($event)">
+        <p class="eyebrow">Password reset</p>
+        <h2>Set a new password</h2>
+        <p class="lede">This preview stores the new password on this device. There is no email link.</p>
+        <label class="field">
+          <span>Email</span>
+          <input
+            type="email"
+            autocomplete="username"
+            [value]="email()"
+            (input)="setEmail($event)"
+            required
+          />
+        </label>
+        <label class="field">
+          <span>New password</span>
+          <input
+            type="password"
+            autocomplete="new-password"
+            [value]="nextPassword()"
+            (input)="setNextPassword($event)"
+            required
+          />
+        </label>
+        <label class="field">
+          <span>Confirm password</span>
+          <input
+            type="password"
+            autocomplete="new-password"
+            [value]="confirm()"
+            (input)="setConfirm($event)"
+            required
+          />
+        </label>
+        @if (error()) {
+          <p class="form-error" role="alert">{{ error() }}</p>
+        }
+        <button class="btn btn-primary" type="submit" [disabled]="busy()">
+          {{ busy() ? 'Updating…' : 'Update password' }}
+        </button>
+        <button class="text-btn" type="button" (click)="showSignIn()">Back to sign in</button>
+      </form>
+    }
+  </section>
+</main>
