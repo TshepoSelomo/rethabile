@@ -21,32 +21,41 @@
       </div>
 
       <div class="d-flex flex-wrap align-items-end gap-3">
-        <div class="project-picker">
-          <label class="form-label" for="project-find">Find project</label>
+        <div class="project-picker position-relative">
+          <label class="form-label" for="project-find">Project</label>
           <input
             id="project-find"
             class="form-control"
             type="search"
-            placeholder="Name, number, or ID"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-controls="project-results"
+            [attr.aria-expanded]="state.projectQuery().trim().length > 0"
+            placeholder="Search by project name or number"
             [value]="state.projectQuery()"
             (input)="state.onProjectQuery($event)"
+            (keydown)="onProjectSearchKey($event)"
           />
-        </div>
-        <div class="project-picker">
-          <label class="form-label" for="project">Project</label>
-          <select
-            id="project"
-            class="form-select"
-            #projectSelect
-            [value]="state.projectId()"
-            (change)="onProject($event)"
-          >
-            @for (item of state.visibleProjects(); track item.id) {
-              <option [value]="item.id" [selected]="item.id === state.projectId()">
-                {{ item.id }} · {{ item.number }} · {{ item.name }}
-              </option>
-            }
-          </select>
+          @if (state.projectQuery().trim()) {
+            <div id="project-results" class="list-group project-results shadow-sm" role="listbox">
+              @if (state.searchResults().length === 0) {
+                <div class="list-group-item text-body-secondary">No project with that name or number.</div>
+              } @else {
+                @for (item of state.searchResults(); track item.id) {
+                  <button
+                    class="list-group-item list-group-item-action text-start"
+                    type="button"
+                    role="option"
+                    (mousedown)="$event.preventDefault()"
+                    (click)="chooseProject(item.id)"
+                  >
+                    <span class="d-block fw-semibold">{{ item.name }}</span>
+                    <span class="small text-body-secondary">{{ item.number }} · {{ item.id }}</span>
+                  </button>
+                }
+              }
+            </div>
+          }
         </div>
         <div class="month-picker">
           <label class="form-label" for="month">Month</label>

@@ -14,7 +14,6 @@ import { SideNav } from '../side-nav/side-nav';
 export class Capture {
   protected readonly state = inject(CaptureState);
   private readonly title = inject(Title);
-  private readonly projectSelect = viewChild<ElementRef<HTMLSelectElement>>('projectSelect');
   private readonly monthInput = viewChild<ElementRef<HTMLInputElement>>('monthInput');
 
   constructor() {
@@ -24,10 +23,19 @@ export class Capture {
     });
   }
 
-  protected onProject(event: Event) {
-    const next = (event.target as HTMLSelectElement).value;
-    this.state.requestNav(next, this.state.month());
-    if (this.state.pending()) queueMicrotask(() => this.resetPickers());
+  protected chooseProject(projectId: string) {
+    this.state.requestNav(projectId, this.state.month());
+  }
+
+  protected onProjectSearchKey(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      this.state.clearProjectQuery();
+      return;
+    }
+    if (event.key !== 'Enter') return;
+    event.preventDefault();
+    const first = this.state.searchResults()[0];
+    if (first) this.chooseProject(first.id);
   }
 
   protected onMonth(event: Event) {
@@ -42,8 +50,6 @@ export class Capture {
   }
 
   private resetPickers() {
-    const project = this.projectSelect()?.nativeElement;
-    if (project) project.value = this.state.projectId();
     const month = this.monthInput()?.nativeElement;
     if (month) month.value = this.state.month();
   }

@@ -16,6 +16,16 @@
 .project-picker { width: min(100%, 28rem); }
 .month-picker { width: min(100%, 11rem); }
 
+.project-results {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  right: 0;
+  max-height: 18rem;
+  overflow: auto;
+}
+
 @media (max-width: 991.98px) {
   .workspace { grid-template-columns: minmax(0, 1fr); }
   .workspace-main { padding: 4.25rem 1rem 2rem; }

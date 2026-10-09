@@ -114,20 +114,15 @@ export class CaptureState {
     daysLate(this.form().procurement.plannedEnd, this.form().procurement.actualEnd),
   );
   readonly dirty = computed(() => this.pack(this.form(), this.project()) !== this.snapshot());
-  readonly visibleProjects = computed(() => {
+  readonly searchResults = computed(() => {
     const query = this.projectQuery().trim().toLowerCase();
-    const current = this.project();
-    const all = this.projects();
-    const matched = !query
-      ? all
-      : all.filter((item) =>
-          [item.id, item.number, item.name, item.programme, item.region, item.manager]
-            .join(' ')
-            .toLowerCase()
-            .includes(query),
-        );
-    if (current && !matched.some((item) => item.id === current.id)) return [current, ...matched];
-    return matched;
+    if (!query) return [];
+    const compactQuery = query.replace(/\s+/g, '');
+    return this.projects().filter((item) => {
+      const name = item.name.toLowerCase();
+      const number = item.number.toLowerCase();
+      return name.includes(query) || number.includes(query) || number.replace(/\s+/g, '').includes(compactQuery);
+    });
   });
   readonly statusLine = computed(() => {
     if (this.dirty()) return 'Unsaved changes';
@@ -149,6 +144,10 @@ export class CaptureState {
 
   onProjectQuery(event: Event) {
     this.projectQuery.set((event.target as HTMLInputElement).value);
+  }
+
+  clearProjectQuery() {
+    this.projectQuery.set('');
   }
 
   requestNav(nextProjectId: string, nextMonth: string) {
@@ -175,6 +174,7 @@ export class CaptureState {
     this.snapshot.set(this.pack(form, project));
     this.pending.set(null);
     this.notice.set('');
+    this.projectQuery.set('');
   }
 
   discardPending() {
