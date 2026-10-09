@@ -9,4 +9,8 @@ import { CaptureState } from '../capture/capture-state';
 })
 export class Milestones {
   protected readonly state = inject(CaptureState);
+
+  protected blur(event: Event) {
+    (event.currentTarget as HTMLInputElement).blur();
+  }
 }

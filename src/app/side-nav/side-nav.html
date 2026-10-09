@@ -1,31 +1,47 @@
-<aside class="side-nav">
-  <div class="nav-brand">
-    <div class="logo-plate">
-      <img class="logo-bar" src="prasa-logo.svg" alt="PRASA" />
+<button
+  class="btn btn-primary d-lg-none position-fixed top-0 start-0 m-2 menu-toggle"
+  type="button"
+  (click)="toggle()"
+  [attr.aria-expanded]="open()"
+  aria-controls="section-menu"
+>
+  {{ open() ? 'Close menu' : 'Menu' }}
+</button>
+@if (open()) {
+  <button class="offcanvas-backdrop fade show d-lg-none border-0" type="button" aria-label="Close menu" (click)="close()"></button>
+}
+
+<aside id="section-menu" class="offcanvas offcanvas-start app-nav text-white" [class.show]="open()" tabindex="-1">
+  <div class="p-3 border-bottom border-light border-opacity-10">
+    <div class="d-flex justify-content-between align-items-start gap-2">
+      <span class="bg-white rounded-3 p-1">
+        <img class="logo-bar" src="prasa-logo.svg" alt="PRASA" />
+      </span>
+      <button class="btn btn-outline-light btn-sm d-lg-none" type="button" (click)="close()">Close</button>
     </div>
-    <div class="brand-copy">
-      <strong>Monthly returns</strong>
-      <span>PRASA</span>
-    </div>
+    <strong class="d-block mt-2">PPM dashboard</strong>
+    <span class="small text-white-50">PRASA</span>
   </div>
 
-  <nav class="nav-menu" aria-label="Return sections">
+  <nav class="nav flex-column gap-1 p-3 flex-grow-1 overflow-auto" aria-label="Return sections">
     @for (item of items; track item.path) {
-      <a class="nav-link" [routerLink]="item.path" routerLinkActive="active">
+      <a class="nav-link" [routerLink]="item.path" routerLinkActive="active" (click)="close()">
         <span class="nav-index">{{ item.index }}</span>
-        <span>{{ item.label }}</span>
+        {{ item.label }}
       </a>
     }
   </nav>
 
-  <div class="nav-footer">
-    <div class="user-profile">
-      <div class="avatar" aria-hidden="true">{{ initials() }}</div>
-      <div class="user-info">
-        <p class="user-name">{{ userName() }}</p>
-        <p class="user-role">Project manager</p>
-      </div>
+  <div class="p-3 border-top border-light border-opacity-10">
+    <div class="d-flex align-items-center gap-3 mb-3">
+      <span class="avatar rounded-circle d-inline-flex align-items-center justify-content-center fw-bold" aria-hidden="true">
+        {{ initials() }}
+      </span>
+      <span class="min-w-0">
+        <span class="d-block fw-bold text-truncate">{{ userName() }}</span>
+        <span class="d-block small text-white-50">Project manager</span>
+      </span>
     </div>
-    <button type="button" class="sign-out" (click)="leave()">Sign out</button>
+    <button class="btn btn-outline-light w-100" type="button" (click)="leave()">Sign out</button>
   </div>
 </aside>

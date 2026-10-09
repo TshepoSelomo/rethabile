@@ -1,9 +1,68 @@
-<app-track-section
-  number="05"
-  title="Procurement stages"
-  headingId="sec-proc"
-  [rows]="state.form().stages"
-  nameLabel="Stage"
-  hint="Pre-BSC through Award. Marking a stage In Progress sets it as the current stage."
-  (changed)="state.onStageChange($event)"
-/>
+<section class="card shadow-sm border-0" aria-labelledby="sec-proc">
+  <div class="card-body">
+    <h2 class="h5 card-title" id="sec-proc">Procurement</h2>
+    <p class="text-body-secondary">
+      One stage for {{ state.project().name }} in {{ state.period().label }}. Workflow: PRE-BSC, BSC, ADVERT, BEC, BAC, AWARD, then CONTRACTING.
+    </p>
+    <div class="d-flex flex-wrap gap-2 mb-4" aria-label="Procurement workflow">
+      @for (stage of state.procurementStages; track stage) {
+        <span
+          class="badge rounded-pill"
+          [class.text-bg-primary]="stage === state.form().procurement.stage"
+          [class.text-bg-light]="stage !== state.form().procurement.stage"
+          [class.border]="stage !== state.form().procurement.stage"
+        >
+          {{ stage }}
+        </span>
+      }
+    </div>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label" for="proc-plp">PLP phase</label>
+        <input id="proc-plp" class="form-control" readonly [value]="state.project().plpPhase" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="proc-stage">Procurement stage</label>
+        <select id="proc-stage" class="form-select" [value]="state.form().procurement.stage" (change)="state.setProcurementStage($event)">
+          <option value="" [selected]="state.form().procurement.stage === ''">Select</option>
+          @for (stage of state.choices(state.procurementStages, state.form().procurement.stage); track stage) {
+            <option [value]="stage" [selected]="stage === state.form().procurement.stage">{{ stage }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="proc-planned-start">Planned start date</label>
+        <input id="proc-planned-start" class="form-control" type="date" [value]="state.form().procurement.plannedStart" (input)="state.setProcurementDate('plannedStart', $event)" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="proc-planned-end">Planned end date</label>
+        <input id="proc-planned-end" class="form-control" type="date" [value]="state.form().procurement.plannedEnd" (input)="state.setProcurementDate('plannedEnd', $event)" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="proc-actual-start">Actual start date</label>
+        <input id="proc-actual-start" class="form-control" type="date" [value]="state.form().procurement.actualStart" (input)="state.setProcurementDate('actualStart', $event)" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="proc-actual-end">Actual end date</label>
+        <input id="proc-actual-end" class="form-control" type="date" [value]="state.form().procurement.actualEnd" (input)="state.setProcurementDate('actualEnd', $event)" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="proc-status">Status</label>
+        <select id="proc-status" class="form-select" [value]="state.form().procurement.status" (change)="state.setProcurementStatus($event)">
+          <option value="" [selected]="state.form().procurement.status === ''">Select</option>
+          @for (status of state.choices(state.recordStatuses, state.form().procurement.status); track status) {
+            <option [value]="status" [selected]="status === state.form().procurement.status">{{ status }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="proc-late">Days late</label>
+        <input id="proc-late" class="form-control" [class.text-danger]="state.procurementLate() > 0" readonly [value]="state.procurementLate()" />
+      </div>
+      <div class="col-12">
+        <label class="form-label" for="proc-comments">Comments</label>
+        <textarea id="proc-comments" class="form-control" rows="3" [value]="state.form().procurement.comments" (input)="state.setProcurementComments($event)"></textarea>
+      </div>
+    </div>
+  </div>
+</section>

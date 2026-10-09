@@ -1,9 +1,11 @@
-<label class="field">
+<label class="form-label d-grid gap-1 mb-0">
   <span>{{ label() }}</span>
   <input
+    class="form-control"
     type="number"
     inputmode="decimal"
     min="0"
+    step="any"
     [attr.max]="max()"
     [value]="value()"
     (wheel)="onWheel($event)"

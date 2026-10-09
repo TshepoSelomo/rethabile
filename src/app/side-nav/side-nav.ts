@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { signOut } from '../data/store';
 
@@ -18,6 +18,7 @@ type NavItem = {
 export class SideNav {
   private readonly router = inject(Router);
   readonly userName = input.required<string>();
+  protected readonly open = signal(false);
   protected readonly initials = computed(() => {
     const parts = this.userName().trim().split(/\s+/).filter(Boolean);
     return ((parts[0]?.[0] ?? '') + (parts[1]?.[0] ?? '')).toUpperCase();
@@ -25,12 +26,21 @@ export class SideNav {
 
   protected readonly items: NavItem[] = [
     { path: '/overview', index: '01', label: 'Overview' },
-    { path: '/financials', index: '02', label: 'Financials' },
-    { path: '/jobs', index: '03', label: 'Jobs' },
-    { path: '/milestones', index: '04', label: 'Milestones' },
-    { path: '/procurement', index: '05', label: 'Procurement' },
-    { path: '/phases', index: '06', label: 'PLP phases' },
+    { path: '/project', index: '02', label: 'Project master' },
+    { path: '/financials', index: '03', label: 'Financial monthly' },
+    { path: '/targets', index: '04', label: 'Targets & actuals' },
+    { path: '/jobs', index: '05', label: 'Jobs monthly' },
+    { path: '/milestones', index: '06', label: 'Milestones' },
+    { path: '/procurement', index: '07', label: 'Procurement' },
   ];
+
+  protected toggle() {
+    this.open.update((value) => !value);
+  }
+
+  protected close() {
+    this.open.set(false);
+  }
 
   protected leave() {
     signOut();

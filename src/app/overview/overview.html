@@ -1,59 +1,88 @@
-<div class="overview">
-  <div class="overview-form">
-    <section class="section" aria-labelledby="plp-current">
-      <header>
-        <h2 id="plp-current">Current PLP phase</h2>
-      </header>
-      <label class="field">
-        <span class="sr">Phase</span>
-        <select [value]="state.currentPhase()?.id ?? ''" (change)="state.onPhaseSelect($event)">
-          <option value="" disabled>Select a phase</option>
-          @for (phase of state.phases; track phase.id; let index = $index) {
-            <option [value]="phase.id" [selected]="phase.id === state.currentPhase()?.id">
-              {{ state.phaseOptionLabel(index) }}
-            </option>
-          }
-        </select>
-      </label>
-      <p class="hint">
-        @if (state.currentPhase(); as phase) {
-          Weight {{ phase.weight }}%. This phase is marked In Progress. Earlier phases become Complete.
-        } @else {
-          No phase is in progress.
-        }
-      </p>
-      <app-number-field
-        label="% of the current phase"
-        [value]="state.form().progressPercent"
-        [max]="100"
-        (valueChange)="state.setProgress($event)"
-      />
+<div class="row g-4">
+  <div class="col-lg-8">
+    <section class="card shadow-sm border-0 mb-4" aria-labelledby="sec-master">
+      <div class="card-body">
+        <h2 class="h5 card-title" id="sec-master">Project master</h2>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex justify-content-between gap-3 px-0">
+            <span class="text-body-secondary">Programme</span>
+            <strong class="text-end">{{ state.project().programme || '—' }}</strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between gap-3 px-0">
+            <span class="text-body-secondary">Region</span>
+            <strong class="text-end">{{ state.project().region || '—' }}</strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between gap-3 px-0">
+            <span class="text-body-secondary">Project manager</span>
+            <strong class="text-end">{{ state.project().manager || '—' }}</strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between gap-3 px-0">
+            <span class="text-body-secondary">PLP phase</span>
+            <strong class="text-end">{{ state.project().plpPhase || '—' }}</strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between gap-3 px-0">
+            <span class="text-body-secondary">Project stage</span>
+            <strong class="text-end">{{ state.project().projectStage || '—' }}</strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between gap-3 px-0">
+            <span class="text-body-secondary">Status</span>
+            <strong class="text-end">{{ state.project().projectStatus || '—' }}</strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between gap-3 px-0">
+            <span class="text-body-secondary">Risk / health</span>
+            <strong class="text-end">{{ state.project().riskLevel || '—' }} · {{ state.project().healthStatus || '—' }}</strong>
+          </li>
+        </ul>
+        <p class="text-body-secondary mb-1 mt-3">% stage of completion</p>
+        <p class="display-6 fw-bold text-primary mb-2">{{ state.formatPercent(state.project().stageCompletion) }}</p>
+        <div class="progress" role="progressbar" [attr.aria-valuenow]="state.project().stageCompletion" aria-valuemin="0" aria-valuemax="100" style="height: 10px">
+          <div class="progress-bar" [style.width.%]="state.project().stageCompletion"></div>
+        </div>
+      </div>
     </section>
 
-    <section class="section" aria-labelledby="stage-current">
-      <header>
-        <h2 id="stage-current">Current procurement stage</h2>
-      </header>
-      <label class="field">
-        <span class="sr">Stage</span>
-        <select [value]="state.currentStage()?.id ?? ''" (change)="state.onStageSelect($event)">
-          <option value="" disabled>Select a stage</option>
-          @for (stage of state.stages; track stage.id) {
-            <option [value]="stage.id" [selected]="stage.id === state.currentStage()?.id">
-              {{ stage.name }}
-            </option>
-          }
-        </select>
-      </label>
-      <p class="hint">Pre-BSC through Award. The chosen stage is marked In Progress.</p>
+    <section class="card shadow-sm border-0" aria-labelledby="sec-month">
+      <div class="card-body">
+        <h2 class="h5 card-title" id="sec-month">This month</h2>
+        <p class="text-body-secondary">{{ state.period().label }}</p>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <p class="text-body-secondary mb-1">Monthly budget</p>
+            <strong>{{ state.formatMoney(state.form().financials.monthlyBudget) }}</strong>
+          </div>
+          <div class="col-md-6">
+            <p class="text-body-secondary mb-1">Monthly expenditure</p>
+            <strong>{{ state.formatMoney(state.form().financials.monthlyExpenditure) }}</strong>
+          </div>
+          <div class="col-md-6">
+            <p class="text-body-secondary mb-1">Planned progress</p>
+            <strong>{{ state.formatPercent(state.form().targets.plannedProgress) }}</strong>
+          </div>
+          <div class="col-md-6">
+            <p class="text-body-secondary mb-1">Actual progress</p>
+            <strong>{{ state.formatPercent(state.form().targets.actualProgress) }}</strong>
+          </div>
+          <div class="col-md-6">
+            <p class="text-body-secondary mb-1">Jobs planned</p>
+            <strong>{{ state.form().jobs.planned }}</strong>
+          </div>
+          <div class="col-md-6">
+            <p class="text-body-secondary mb-1">Jobs actual (male + female)</p>
+            <strong>{{ state.jobsActual() }}</strong>
+          </div>
+          <div class="col-md-6">
+            <p class="text-body-secondary mb-1">Jobs shortfall</p>
+            <strong [class.text-danger]="state.jobsShortfall() > 0">{{ state.jobsShortfall() }}</strong>
+          </div>
+          <div class="col-md-6">
+            <p class="text-body-secondary mb-1">Procurement stage</p>
+            <strong>{{ state.form().procurement.stage || '—' }}</strong>
+          </div>
+        </div>
+      </div>
     </section>
   </div>
-
-  <app-summary-panel
-    [project]="state.project()"
-    [month]="state.month()"
-    [form]="state.form()"
-    [progress]="state.progress()"
-    [balance]="state.balance()"
-  />
+  <div class="col-lg-4">
+    <app-summary-panel [project]="state.project()" [month]="state.month()" [form]="state.form()" />
+  </div>
 </div>

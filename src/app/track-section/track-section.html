@@ -1,83 +1,87 @@
-<section class="section" [attr.aria-labelledby]="showHeading() ? headingId() : null">
-  @if (showHeading()) {
-    <header>
-      <span class="section-no">{{ number() }}</span>
-      <h2 [id]="headingId()">{{ title() }}</h2>
-    </header>
-  }
-  @if (hint()) {
-    <p class="hint">{{ hint() }}</p>
-  }
-  <div class="table-wrap">
-    <table class="sheet">
-      <thead>
-        <tr>
-          <th>{{ nameLabel() }}</th>
-          @if (showWeight()) {
-            <th>Weight</th>
-          }
-          <th>Planned start</th>
-          <th>Planned end</th>
-          <th>Actual start</th>
-          <th>Actual end</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (row of rows(); track row.id; let index = $index) {
-          <tr [class]="statusSlug(row.status)">
-            <td class="name">
-              {{ showWeight() ? 'Phase ' + (index + 1) + ' — ' + row.name : row.name }}
-            </td>
+<section class="card shadow-sm border-0" [attr.aria-labelledby]="showHeading() ? headingId() : null">
+  <div class="card-body">
+    @if (showHeading()) {
+      <h2 class="h5 card-title" [id]="headingId()">{{ title() }}</h2>
+    }
+    @if (hint()) {
+      <p class="text-body-secondary">{{ hint() }}</p>
+    }
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th>{{ nameLabel() }}</th>
             @if (showWeight()) {
-              <td class="num">{{ row.weight }}%</td>
+              <th>Weight</th>
             }
-            <td>
-              <input
-                type="date"
-                [attr.aria-label]="row.name + ' planned start'"
-                [value]="row.plannedStart"
-                (input)="onDate(row.id, 'plannedStart', $event)"
-              />
-            </td>
-            <td>
-              <input
-                type="date"
-                [attr.aria-label]="row.name + ' planned end'"
-                [value]="row.plannedEnd"
-                (input)="onDate(row.id, 'plannedEnd', $event)"
-              />
-            </td>
-            <td>
-              <input
-                type="date"
-                [attr.aria-label]="row.name + ' actual start'"
-                [value]="row.actualStart"
-                (input)="onDate(row.id, 'actualStart', $event)"
-              />
-            </td>
-            <td>
-              <input
-                type="date"
-                [attr.aria-label]="row.name + ' actual end'"
-                [value]="row.actualEnd"
-                (input)="onDate(row.id, 'actualEnd', $event)"
-              />
-            </td>
-            <td>
-              <select
-                [attr.aria-label]="row.name + ' status'"
-                [value]="row.status"
-                (change)="onStatus(row.id, $event)"
-              >
-                @for (status of statuses; track status) {
-                  <option [value]="status" [selected]="status === row.status">{{ status }}</option>
-                }
-              </select>
-            </td>
+            <th>Planned start</th>
+            <th>Planned end</th>
+            <th>Actual start</th>
+            <th>Actual end</th>
+            <th>Status</th>
           </tr>
-        }
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.id; let index = $index) {
+            <tr [class]="statusSlug(row.status)">
+              <td class="name">
+                {{ showWeight() ? 'Phase ' + (index + 1) + ' — ' + row.name : row.name }}
+              </td>
+              @if (showWeight()) {
+                <td>{{ row.weight }}%</td>
+              }
+              <td>
+                <input
+                  class="form-control form-control-sm"
+                  type="date"
+                  [attr.aria-label]="row.name + ' planned start'"
+                  [value]="row.plannedStart"
+                  (input)="onDate(row.id, 'plannedStart', $event)"
+                />
+              </td>
+              <td>
+                <input
+                  class="form-control form-control-sm"
+                  type="date"
+                  [attr.aria-label]="row.name + ' planned end'"
+                  [value]="row.plannedEnd"
+                  (input)="onDate(row.id, 'plannedEnd', $event)"
+                />
+              </td>
+              <td>
+                <input
+                  class="form-control form-control-sm"
+                  type="date"
+                  [attr.aria-label]="row.name + ' actual start'"
+                  [value]="row.actualStart"
+                  (input)="onDate(row.id, 'actualStart', $event)"
+                />
+              </td>
+              <td>
+                <input
+                  class="form-control form-control-sm"
+                  type="date"
+                  [attr.aria-label]="row.name + ' actual end'"
+                  [value]="row.actualEnd"
+                  (input)="onDate(row.id, 'actualEnd', $event)"
+                />
+              </td>
+              <td>
+                <select
+                  class="form-select form-select-sm"
+                  [attr.aria-label]="row.name + ' status'"
+                  [value]="row.status"
+                  (change)="onStatus(row.id, $event)"
+                >
+                  @for (status of statuses; track status) {
+                    <option [value]="status" [selected]="status === row.status">{{ status }}</option>
+                  }
+                </select>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   </div>
 </section>

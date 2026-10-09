@@ -1,21 +1,50 @@
-<section class="section" aria-labelledby="sec-jobs">
-  <header>
-    <h2 id="sec-jobs">Jobs</h2>
-  </header>
-  <div class="fields">
-    <app-number-field label="Planned jobs" [value]="state.form().jobs.planned" (valueChange)="state.setJob('planned', $event)" />
-    <app-number-field
-      label="Jobs created to date"
-      [value]="state.form().jobs.createdToDate"
-      (valueChange)="state.setJob('createdToDate', $event)"
-    />
-    <app-number-field
-      label="Jobs this month"
-      [value]="state.form().jobs.thisMonth"
-      (valueChange)="state.setJob('thisMonth', $event)"
-    />
-    <app-number-field label="Local jobs" [value]="state.form().jobs.local" (valueChange)="state.setJob('local', $event)" />
-    <app-number-field label="Youth jobs" [value]="state.form().jobs.youth" (valueChange)="state.setJob('youth', $event)" />
-    <app-number-field label="Women jobs" [value]="state.form().jobs.women" (valueChange)="state.setJob('women', $event)" />
+<section class="card shadow-sm border-0" aria-labelledby="sec-jobs">
+  <div class="card-body">
+    <h2 class="h5 card-title" id="sec-jobs">Jobs monthly</h2>
+    <p class="text-body-secondary">
+      {{ state.project().programme || 'No programme' }} · {{ state.period().label }}. Jobs actual is male plus female. Shortfall is planned minus actual.
+    </p>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <app-number-field label="Jobs planned" [value]="state.form().jobs.planned" (valueChange)="state.setJob('planned', $event)" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="jobs-actual">Jobs actual</label>
+        <input id="jobs-actual" class="form-control" readonly [value]="state.jobsActual()" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="jobs-shortfall">Jobs shortfall</label>
+        <input
+          id="jobs-shortfall"
+          class="form-control"
+          [class.text-danger]="state.jobsShortfall() > 0"
+          [class.fw-semibold]="state.jobsShortfall() > 0"
+          readonly
+          [value]="state.jobsShortfall()"
+        />
+      </div>
+      <div class="col-md-4">
+        <app-number-field label="Male" [value]="state.form().jobs.male" (valueChange)="state.setJob('male', $event)" />
+      </div>
+      <div class="col-md-4">
+        <app-number-field label="Female" [value]="state.form().jobs.female" (valueChange)="state.setJob('female', $event)" />
+      </div>
+      <div class="col-md-4">
+        <app-number-field label="Youth" [value]="state.form().jobs.youth" (valueChange)="state.setJob('youth', $event)" />
+      </div>
+      <div class="col-md-4">
+        <app-number-field label="Above 35" [value]="state.form().jobs.above35" (valueChange)="state.setJob('above35', $event)" />
+      </div>
+      <div class="col-md-4">
+        <app-number-field label="PLD" [value]="state.form().jobs.pld" (valueChange)="state.setJob('pld', $event)" />
+      </div>
+      <div class="col-md-4">
+        <app-number-field label="Foreign" [value]="state.form().jobs.foreign" (valueChange)="state.setJob('foreign', $event)" />
+      </div>
+      <div class="col-12">
+        <label class="form-label" for="jobs-notes">Jobs notes</label>
+        <textarea id="jobs-notes" class="form-control" rows="3" [value]="state.form().jobs.notes" (input)="state.setJobNotes($event)"></textarea>
+      </div>
+    </div>
   </div>
 </section>

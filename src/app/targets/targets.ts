@@ -1,12 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { CaptureState } from '../capture/capture-state';
+import { NumberField } from '../number-field/number-field';
 
 @Component({
-  selector: 'app-procurement',
+  selector: 'app-targets',
   standalone: true,
-  templateUrl: './procurement.html',
-  styleUrl: './procurement.css',
+  imports: [NumberField],
+  templateUrl: './targets.html',
+  styleUrl: './targets.css',
 })
-export class Procurement {
+export class Targets {
   protected readonly state = inject(CaptureState);
 }

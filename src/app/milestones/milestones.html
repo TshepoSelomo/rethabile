@@ -1,67 +1,77 @@
-<section class="section" aria-labelledby="sec-miles">
-  <header class="section-head">
-    <h2 id="sec-miles">Milestones</h2>
-    <button type="button" class="btn" (click)="state.addMilestone()">Add milestone</button>
-  </header>
-  @if (state.form().milestones.length === 0) {
-    <p class="hint">No milestones for this month yet.</p>
-  } @else {
-    <div class="table-wrap">
-      <table class="sheet">
-        <thead>
-          <tr>
-            <th>Milestone</th>
-            <th>Planned</th>
-            <th>Actual</th>
-            <th>Status</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (milestone of state.form().milestones; track milestone.id) {
-            <tr>
-              <td>
-                <input
-                  class="milestone-name"
-                  aria-label="Milestone name"
-                  [value]="milestone.name"
-                  (input)="state.onMilestoneName(milestone.id, $event)"
-                />
-              </td>
-              <td>
-                <input
-                  type="date"
-                  aria-label="Planned date"
-                  [value]="milestone.planned"
-                  (input)="state.onMilestoneDate(milestone.id, 'planned', $event)"
-                />
-              </td>
-              <td>
-                <input
-                  type="date"
-                  aria-label="Actual date"
-                  [value]="milestone.actual"
-                  (input)="state.onMilestoneDate(milestone.id, 'actual', $event)"
-                />
-              </td>
-              <td>
-                <select
-                  aria-label="Milestone status"
-                  [value]="milestone.status"
-                  (change)="state.onMilestoneStatus(milestone.id, $event)"
-                >
-                  @for (status of state.milestoneStatuses; track status) {
-                    <option [value]="status" [selected]="status === milestone.status">{{ status }}</option>
-                  }
-                </select>
-              </td>
-              <td>
-                <button type="button" class="text-btn" (click)="state.removeMilestone(milestone.id)">Remove</button>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+<section class="card shadow-sm border-0" aria-labelledby="sec-miles">
+  <div class="card-body">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+      <div>
+        <h2 class="h5 card-title mb-1" id="sec-miles">Milestones</h2>
+        <p class="text-body-secondary mb-0">{{ state.period().label }}. Days late compares the planned date with the actual date.</p>
+      </div>
+      <button class="btn btn-primary" type="button" (click)="state.addMilestone()">Add milestone</button>
     </div>
-  }
+    @if (state.form().milestones.length === 0) {
+      <div class="alert alert-light border mb-0" role="status">No milestones for this month yet. Add one to track it.</div>
+    } @else {
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead>
+            <tr>
+              <th>Milestone ID</th>
+              <th>Milestone name</th>
+              <th>Type</th>
+              <th>Planned date</th>
+              <th>Actual date</th>
+              <th>Status</th>
+              <th>Weight %</th>
+              <th>Responsible person</th>
+              <th>Days late</th>
+              <th>Comments</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (milestone of state.form().milestones; track milestone.id) {
+              <tr>
+                <td>
+                  <input class="form-control form-control-sm" aria-label="Milestone ID" [value]="milestone.code" (input)="state.onMilestoneText(milestone.id, 'code', $event)" />
+                </td>
+                <td>
+                  <input class="form-control form-control-sm milestone-name" aria-label="Milestone name" placeholder="Milestone name" [value]="milestone.name" (input)="state.onMilestoneText(milestone.id, 'name', $event)" />
+                </td>
+                <td>
+                  <input class="form-control form-control-sm" aria-label="Milestone type" [value]="milestone.type" (input)="state.onMilestoneText(milestone.id, 'type', $event)" />
+                </td>
+                <td>
+                  <input class="form-control form-control-sm" type="date" aria-label="Planned date" [value]="milestone.plannedDate" (input)="state.onMilestoneDate(milestone.id, 'plannedDate', $event)" />
+                </td>
+                <td>
+                  <input class="form-control form-control-sm" type="date" aria-label="Actual date" [value]="milestone.actualDate" (input)="state.onMilestoneDate(milestone.id, 'actualDate', $event)" />
+                </td>
+                <td>
+                  <select class="form-select form-select-sm" aria-label="Milestone status" [value]="milestone.status" (change)="state.onMilestoneStatus(milestone.id, $event)">
+                    @for (status of state.recordStatuses; track status) {
+                      <option [value]="status" [selected]="status === milestone.status">{{ status }}</option>
+                    }
+                  </select>
+                </td>
+                <td>
+                  <input class="form-control form-control-sm" type="number" min="0" max="100" aria-label="Weight percent" [value]="milestone.weight" (wheel)="blur($event)" (input)="state.onMilestoneWeight(milestone.id, $event)" />
+                </td>
+                <td>
+                  <input class="form-control form-control-sm" aria-label="Responsible person" [value]="milestone.responsible" (input)="state.onMilestoneText(milestone.id, 'responsible', $event)" />
+                </td>
+                <td [class.text-danger]="state.daysLate(milestone.plannedDate, milestone.actualDate) > 0">
+                  {{ state.daysLate(milestone.plannedDate, milestone.actualDate) }}
+                </td>
+                <td>
+                  <input class="form-control form-control-sm" aria-label="Comments" [value]="milestone.comments" (input)="state.onMilestoneText(milestone.id, 'comments', $event)" />
+                </td>
+                <td>
+                  <button class="btn btn-outline-danger btn-sm" type="button" (click)="state.removeMilestone(milestone.id)">Remove</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
 </section>

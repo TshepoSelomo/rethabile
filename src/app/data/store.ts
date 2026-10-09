@@ -1,4 +1,7 @@
-import { DEMO_ACCOUNTS, SEED_PROJECTS, type MonthlyReturn, type Project } from './model';
+import { DEMO_ACCOUNTS, type MonthlyReturn, type Project } from './model';
+import { SEED_PROJECTS } from './projects.seed';
+
+const DATA_VERSION = 'ppm-1';
 
 const KEYS = {
   users: 'rethabile.users',
@@ -52,8 +55,13 @@ export async function ensureSeeded() {
     }
     writeJSON(KEYS.users, users);
   }
-  if (!localStorage.getItem(KEYS.projects)) writeJSON(KEYS.projects, SEED_PROJECTS);
-  if (!localStorage.getItem(KEYS.returns)) writeJSON(KEYS.returns, {});
+  const stored = readJSON<Project[]>(KEYS.projects, []);
+  const current = stored.length > 0 && 'number' in stored[0] && 'plpPhase' in stored[0];
+  if (localStorage.getItem('rethabile.dataVersion') !== DATA_VERSION || !current) {
+    writeJSON(KEYS.projects, SEED_PROJECTS);
+    writeJSON(KEYS.returns, {});
+    localStorage.setItem('rethabile.dataVersion', DATA_VERSION);
+  }
 }
 
 function readUsers() {
@@ -93,30 +101,24 @@ export async function resetPassword(email: string, password: string) {
 
 export function loadProjects() {
   const projects = readJSON<Project[]>(KEYS.projects, SEED_PROJECTS);
-  return projects.length > 0 ? projects : SEED_PROJECTS;
+  if (!projects.length || !projects[0]?.number) return SEED_PROJECTS;
+  return projects;
 }
 
 export function loadReturn(projectId: string, month: string) {
   const all = readJSON<Record<string, MonthlyReturn>>(KEYS.returns, {});
-  return all[`${projectId}:${month}`] ?? null;
+  const found = all[`${projectId}:${month}`];
+  if (!found?.financials || !('monthlyBudget' in found.financials)) return null;
+  return found;
 }
 
-export function saveReturn(ret: MonthlyReturn, projects: Project[]) {
+export function saveCapture(ret: MonthlyReturn, project: Project, projects: Project[]) {
   const all = readJSON<Record<string, MonthlyReturn>>(KEYS.returns, {});
   all[`${ret.projectId}:${ret.month}`] = ret;
   writeJSON(KEYS.returns, all);
-
-  const phaseId = ret.phases.find((phase) => phase.status === 'In Progress')?.id;
-  const stageId = ret.stages.find((stage) => stage.status === 'In Progress')?.id;
-  const next = projects.map((project) =>
-    project.id === ret.projectId
-      ? {
-          ...project,
-          phaseId: phaseId ?? project.phaseId,
-          stageId: stageId ?? project.stageId,
-        }
-      : project,
-  );
+  const next = projects.some((item) => item.id === project.id)
+    ? projects.map((item) => (item.id === project.id ? project : item))
+    : [...projects, project];
   writeJSON(KEYS.projects, next);
   return next;
 }

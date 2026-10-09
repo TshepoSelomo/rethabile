@@ -1,0 +1,212 @@
+<section class="card shadow-sm border-0 mb-4" aria-labelledby="sec-identity">
+  <div class="card-body">
+    <h2 class="h5 card-title" id="sec-identity">Project identity</h2>
+    <p class="text-body-secondary">One row on the Project Master sheet. Project ID stays with the project.</p>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label class="form-label" for="project-id">Project ID</label>
+        <input id="project-id" class="form-control" readonly [value]="state.project().id" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="project-number">Project number</label>
+        <input id="project-number" class="form-control" [value]="state.project().number" (input)="state.setText('number', $event)" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="project-fy">Financial year</label>
+        <input id="project-fy" class="form-control" [value]="state.project().financialYear" (input)="state.setText('financialYear', $event)" />
+      </div>
+      <div class="col-12">
+        <label class="form-label" for="project-name">Project name</label>
+        <input id="project-name" class="form-control" [value]="state.project().name" (input)="state.setText('name', $event)" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="project-manager">Project manager</label>
+        <input id="project-manager" class="form-control" [value]="state.project().manager" (input)="state.setText('manager', $event)" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="card shadow-sm border-0 mb-4" aria-labelledby="sec-class">
+  <div class="card-body">
+    <h2 class="h5 card-title" id="sec-class">Classification</h2>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label" for="portfolio">Portfolio</label>
+        <select id="portfolio" class="form-select" [value]="state.project().portfolio" (change)="state.setChoice('portfolio', $event)">
+          <option value="" [selected]="state.project().portfolio === ''">Select</option>
+          @for (option of state.choices(state.portfolios, state.project().portfolio); track option) {
+            <option [value]="option" [selected]="option === state.project().portfolio">{{ option }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="programme">Programme</label>
+        <select id="programme" class="form-select" [value]="state.project().programme" (change)="state.setChoice('programme', $event)">
+          <option value="" [selected]="state.project().programme === ''">Select</option>
+          @for (option of state.choices(state.programmes, state.project().programme); track option) {
+            <option [value]="option" [selected]="option === state.project().programme">{{ option }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="service-line">Service line</label>
+        <select id="service-line" class="form-select" [value]="state.project().serviceLine" (change)="state.setChoice('serviceLine', $event)">
+          <option value="" [selected]="state.project().serviceLine === ''">Select</option>
+          @for (option of state.choices(state.serviceLines, state.project().serviceLine); track option) {
+            <option [value]="option" [selected]="option === state.project().serviceLine">{{ option }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="region">Region</label>
+        <select id="region" class="form-select" [value]="state.project().region" (change)="state.setChoice('region', $event)">
+          <option value="" [selected]="state.project().region === ''">Select</option>
+          @for (option of state.choices(state.regions, state.project().region); track option) {
+            <option [value]="option" [selected]="option === state.project().region">{{ option }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="department">Department</label>
+        <select id="department" class="form-select" [value]="state.project().department" (change)="state.setChoice('department', $event)">
+          <option value="" [selected]="state.project().department === ''">Select</option>
+          @for (option of state.choices(state.departments, state.project().department); track option) {
+            <option [value]="option" [selected]="option === state.project().department">{{ option }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="funding">Funding type</label>
+        <select id="funding" class="form-select" [value]="state.project().fundingType" (change)="state.setChoice('fundingType', $event)">
+          <option value="" [selected]="state.project().fundingType === ''">Select</option>
+          @for (option of state.choices(state.fundingTypes, state.project().fundingType); track option) {
+            <option [value]="option" [selected]="option === state.project().fundingType">{{ option }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="priority">Priority</label>
+        <select id="priority" class="form-select" [value]="state.project().priority" (change)="state.setChoice('priority', $event)">
+          <option value="" [selected]="state.project().priority === ''">Select</option>
+          @for (option of state.choices(state.priorities, state.project().priority); track option) {
+            <option [value]="option" [selected]="option === state.project().priority">{{ option }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="plp">PLP phase</label>
+        <select id="plp" class="form-select" [value]="state.project().plpPhase" (change)="state.setChoice('plpPhase', $event)">
+          <option value="" [selected]="state.project().plpPhase === ''">Select</option>
+          @for (option of state.choices(state.plpPhases, state.project().plpPhase); track option) {
+            <option [value]="option" [selected]="option === state.project().plpPhase">{{ option }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="stage">Project stage</label>
+        <select id="stage" class="form-select" [value]="state.project().projectStage" (change)="state.setChoice('projectStage', $event)">
+          <option value="" [selected]="state.project().projectStage === ''">Select</option>
+          @for (option of state.choices(state.projectStages, state.project().projectStage); track option) {
+            <option [value]="option" [selected]="option === state.project().projectStage">{{ option }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="status">Project status</label>
+        <select id="status" class="form-select" [value]="state.project().projectStatus" (change)="state.setChoice('projectStatus', $event)">
+          <option value="" [selected]="state.project().projectStatus === ''">Select</option>
+          @for (option of state.choices(state.projectStatuses, state.project().projectStatus); track option) {
+            <option [value]="option" [selected]="option === state.project().projectStatus">{{ option }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="risk">Risk level</label>
+        <select id="risk" class="form-select" [value]="state.project().riskLevel" (change)="state.setChoice('riskLevel', $event)">
+          <option value="" [selected]="state.project().riskLevel === ''">Select</option>
+          @for (option of state.choices(state.riskLevels, state.project().riskLevel); track option) {
+            <option [value]="option" [selected]="option === state.project().riskLevel">{{ option }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="health">Health status</label>
+        <select id="health" class="form-select" [value]="state.project().healthStatus" (change)="state.setChoice('healthStatus', $event)">
+          <option value="" [selected]="state.project().healthStatus === ''">Select</option>
+          @for (option of state.choices(state.healthStatuses, state.project().healthStatus); track option) {
+            <option [value]="option" [selected]="option === state.project().healthStatus">{{ option }}</option>
+          }
+        </select>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="card shadow-sm border-0 mb-4" aria-labelledby="sec-dates">
+  <div class="card-body">
+    <h2 class="h5 card-title" id="sec-dates">Schedule</h2>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label" for="planned-start">Planned start date</label>
+        <input id="planned-start" class="form-control" type="date" [value]="state.project().plannedStart" (input)="state.setDate('plannedStart', $event)" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="actual-start">Actual start date</label>
+        <input id="actual-start" class="form-control" type="date" [value]="state.project().actualStart" (input)="state.setDate('actualStart', $event)" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="planned-end">Planned completion date</label>
+        <input id="planned-end" class="form-control" type="date" [value]="state.project().plannedCompletion" (input)="state.setDate('plannedCompletion', $event)" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="actual-end">Actual completion date</label>
+        <input id="actual-end" class="form-control" type="date" [value]="state.project().actualCompletion" (input)="state.setDate('actualCompletion', $event)" />
+      </div>
+      <div class="col-md-6">
+        <app-number-field
+          label="Contract duration (months)"
+          [value]="state.project().contractMonths"
+          (valueChange)="state.setProjectNumber('contractMonths', $event)"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="card shadow-sm border-0" aria-labelledby="sec-budget">
+  <div class="card-body">
+    <h2 class="h5 card-title" id="sec-budget">Budgets and completion</h2>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <app-number-field
+          label="DOT allocation (R)"
+          [value]="state.project().dotAllocation"
+          (valueChange)="state.setProjectNumber('dotAllocation', $event)"
+        />
+      </div>
+      <div class="col-md-6">
+        <app-number-field
+          label="Roll-over (R)"
+          [value]="state.project().rollOver"
+          (valueChange)="state.setProjectNumber('rollOver', $event)"
+        />
+      </div>
+      <div class="col-md-6">
+        <app-number-field
+          label="Baseline projection (R)"
+          [value]="state.project().baselineProjection"
+          (valueChange)="state.setProjectNumber('baselineProjection', $event)"
+        />
+      </div>
+      <div class="col-md-6">
+        <app-number-field
+          label="% stage of completion"
+          [value]="state.project().stageCompletion"
+          [max]="100"
+          (valueChange)="state.setProjectNumber('stageCompletion', $event)"
+        />
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,11 +1,1 @@
 :host { display: block; }
-
-.fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 0.8rem 1rem;
-}
-
-@media (max-width: 900px) {
-  .fields { grid-template-columns: 1fr; }
-}

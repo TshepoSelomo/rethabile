@@ -1,5 +1,23 @@
 import { Component, input, output } from '@angular/core';
-import { TRACK_STATUSES, statusSlug, type TrackRow, type TrackStatus } from '../data/model';
+
+type TrackStatus = 'Not Started' | 'In Progress' | 'Complete';
+
+type TrackRow = {
+  id: string;
+  name: string;
+  weight: number;
+  plannedStart: string;
+  plannedEnd: string;
+  actualStart: string;
+  actualEnd: string;
+  status: TrackStatus;
+};
+
+const TRACK_STATUSES: TrackStatus[] = ['Not Started', 'In Progress', 'Complete'];
+
+function statusSlug(status: string) {
+  return status.toLowerCase().replace(/\s+/g, '-');
+}
 
 @Component({
   selector: 'app-track-section',

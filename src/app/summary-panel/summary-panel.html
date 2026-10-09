@@ -1,60 +1,56 @@
-<aside class="summary" aria-label="Return summary">
-  <p class="eyebrow">{{ project().code }}</p>
-  <h2>{{ formatMonth(month()) }}</h2>
-  <p class="summary-kicker">Overall progress</p>
-  <p class="progress-value">{{ formatPercent(progress().total) }}</p>
-  <div
-    class="weight-bar"
-    role="img"
-    [attr.aria-label]="'Overall progress ' + formatPercent(progress().total)"
-  >
-    @for (phase of form().phases; track phase.id) {
-      <span [style.flex]="phase.weight ?? 1" [attr.title]="phase.name + ' ' + phase.weight + '%'">
-        <span [style.width.%]="phaseFill(phase)"></span>
-      </span>
-    }
-  </div>
-  <p class="story">{{ progressStory(form().phases, progress()) }}</p>
+<aside class="card shadow-sm border-0" aria-label="Return summary">
+  <div class="card-body">
+    <p class="text-body-secondary small mb-1">{{ project().id }}</p>
+    <h2 class="h5">{{ project().number || project().name }}</h2>
+    <p class="text-body-secondary mb-1">Stage of completion</p>
+    <p class="display-6 fw-bold text-primary mb-2">{{ formatPercent(project().stageCompletion) }}</p>
+    <div
+      class="progress mb-3"
+      role="progressbar"
+      [attr.aria-valuenow]="project().stageCompletion"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      [attr.aria-label]="'Stage of completion ' + formatPercent(project().stageCompletion)"
+      style="height: 10px"
+    >
+      <div class="progress-bar" [style.width.%]="project().stageCompletion"></div>
+    </div>
 
-  <dl class="summary-list">
-    <div>
-      <dt>PLP phase</dt>
-      <dd>{{ currentPhase() ? currentPhase()!.name : 'None in progress' }}</dd>
-    </div>
-    <div>
-      <dt>Procurement stage</dt>
-      <dd>{{ currentStage() ? currentStage()!.name : 'None in progress' }}</dd>
-    </div>
-    <div>
-      <dt>Spend to date</dt>
-      <dd>
-        {{ formatMoney(form().financials.expenditureToDate) }}
-        <small>of {{ formatMoney(form().financials.approvedBudget) }} approved</small>
-      </dd>
-    </div>
-    <div>
-      <dt>This month</dt>
-      <dd>{{ formatMoney(form().financials.expenditureThisMonth) }}</dd>
-    </div>
-    <div>
-      <dt>Balance</dt>
-      <dd [class.over]="balance() < 0">{{ formatMoney(balance()) }}</dd>
-    </div>
-    <div>
-      <dt>Jobs this month</dt>
-      <dd>{{ form().jobs.thisMonth }}</dd>
-    </div>
-    <div>
-      <dt>Return</dt>
-      <dd>
-        {{ form().status === 'submitted' ? 'Submitted' : 'Draft' }}
-        @if (form().submittedBy) {
-          <small>by {{ form().submittedBy }}</small>
-        }
-        @if (form().submittedAt) {
-          <small>{{ formatWhen(form().submittedAt) }}</small>
-        }
-      </dd>
-    </div>
-  </dl>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item d-flex justify-content-between gap-3 px-0">
+        <span class="text-body-secondary">DOT allocation</span>
+        <strong class="text-end">{{ formatMoney(project().dotAllocation) }}</strong>
+      </li>
+      <li class="list-group-item d-flex justify-content-between gap-3 px-0">
+        <span class="text-body-secondary">Baseline projection</span>
+        <strong class="text-end">{{ formatMoney(project().baselineProjection) }}</strong>
+      </li>
+      <li class="list-group-item d-flex justify-content-between gap-3 px-0">
+        <span class="text-body-secondary">Monthly expenditure</span>
+        <strong>{{ formatMoney(form().financials.monthlyExpenditure) }}</strong>
+      </li>
+      <li class="list-group-item d-flex justify-content-between gap-3 px-0">
+        <span class="text-body-secondary">Actual progress</span>
+        <strong>{{ formatPercent(form().targets.actualProgress) }}</strong>
+      </li>
+      <li class="list-group-item d-flex justify-content-between gap-3 px-0">
+        <span class="text-body-secondary">Jobs shortfall</span>
+        <strong [class.text-danger]="shortfall() > 0">{{ shortfall() }}</strong>
+      </li>
+      <li class="list-group-item d-flex justify-content-between gap-3 px-0">
+        <span class="text-body-secondary">Return</span>
+        <span class="text-end">
+          <span class="badge" [class.text-bg-primary]="form().status === 'submitted'" [class.text-bg-secondary]="form().status !== 'submitted'">
+            {{ form().status === 'submitted' ? 'Submitted' : 'Draft' }}
+          </span>
+          @if (form().submittedBy) {
+            <span class="d-block small text-body-secondary">by {{ form().submittedBy }}</span>
+          }
+          @if (form().submittedAt) {
+            <span class="d-block small text-body-secondary">{{ formatWhen(form().submittedAt) }}</span>
+          }
+        </span>
+      </li>
+    </ul>
+  </div>
 </aside>

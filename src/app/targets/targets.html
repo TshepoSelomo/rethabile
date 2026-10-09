@@ -1,0 +1,56 @@
+<section class="card shadow-sm border-0" aria-labelledby="sec-targets">
+  <div class="card-body">
+    <h2 class="h5 card-title" id="sec-targets">Targets and actuals</h2>
+    <p class="text-body-secondary">
+      One row for {{ state.project().name }} in {{ state.period().label }}.
+    </p>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <app-number-field
+          label="Planned progress %"
+          [value]="state.form().targets.plannedProgress"
+          [max]="100"
+          (valueChange)="state.setTargetNumber('plannedProgress', $event)"
+        />
+      </div>
+      <div class="col-md-6">
+        <app-number-field
+          label="Actual progress %"
+          [value]="state.form().targets.actualProgress"
+          [max]="100"
+          (valueChange)="state.setTargetNumber('actualProgress', $event)"
+        />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="planned-deliverables">Planned deliverables</label>
+        <textarea
+          id="planned-deliverables"
+          class="form-control"
+          rows="3"
+          [value]="state.form().targets.plannedDeliverables"
+          (input)="state.setTargetText('plannedDeliverables', $event)"
+        ></textarea>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="actual-deliverables">Actual deliverables</label>
+        <textarea
+          id="actual-deliverables"
+          class="form-control"
+          rows="3"
+          [value]="state.form().targets.actualDeliverables"
+          (input)="state.setTargetText('actualDeliverables', $event)"
+        ></textarea>
+      </div>
+      <div class="col-12">
+        <label class="form-label" for="target-notes">Target notes</label>
+        <textarea
+          id="target-notes"
+          class="form-control"
+          rows="3"
+          [value]="state.form().targets.notes"
+          (input)="state.setTargetText('notes', $event)"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+</section>

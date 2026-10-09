@@ -2,45 +2,79 @@
   <app-side-nav [userName]="state.userName" />
 
   <div class="workspace-main">
-    <header class="workspace-bar">
-      <div class="workspace-title">
-        <p class="crumb">Monthly returns <span>/</span> {{ state.pageTitle() }}</p>
-        <h1>{{ state.project().name }} <small>{{ state.project().code }}</small></h1>
-        <p class="context">{{ state.formatMonth(state.month()) }}</p>
+    <header class="d-flex flex-wrap justify-content-between align-items-end gap-3 pb-3 mb-4 border-bottom">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-2">
+            <li class="breadcrumb-item">PPM dashboard</li>
+            <li class="breadcrumb-item active" aria-current="page">{{ state.pageTitle() }}</li>
+          </ol>
+        </nav>
+        <h1 class="h2 mb-1">{{ state.project().name }}</h1>
+        <p class="text-body-secondary mb-0">
+          {{ state.project().id }}
+          @if (state.project().number) {
+            · {{ state.project().number }}
+          }
+        </p>
+        <p class="text-body-secondary mb-0">{{ state.period().label }}</p>
       </div>
-      <div class="workspace-tools">
-      <div class="context-pickers">
-        <label class="field">
-          <span>Project</span>
-          <select #projectSelect [value]="state.projectId()" (change)="onProject($event)">
-            @for (item of state.projects(); track item.id) {
+
+      <div class="d-flex flex-wrap align-items-end gap-3">
+        <div class="project-picker">
+          <label class="form-label" for="project-find">Find project</label>
+          <input
+            id="project-find"
+            class="form-control"
+            type="search"
+            placeholder="Name, number, or ID"
+            [value]="state.projectQuery()"
+            (input)="state.onProjectQuery($event)"
+          />
+        </div>
+        <div class="project-picker">
+          <label class="form-label" for="project">Project</label>
+          <select
+            id="project"
+            class="form-select"
+            #projectSelect
+            [value]="state.projectId()"
+            (change)="onProject($event)"
+          >
+            @for (item of state.visibleProjects(); track item.id) {
               <option [value]="item.id" [selected]="item.id === state.projectId()">
-                {{ item.code }} · {{ item.name }}
+                {{ item.id }} · {{ item.number }} · {{ item.name }}
               </option>
             }
           </select>
-        </label>
-        <label class="field">
-          <span>Month</span>
-          <input #monthInput type="month" [value]="state.month()" (change)="onMonth($event)" />
-        </label>
-      </div>
-      <div class="workspace-actions">
-        <p role="status">{{ state.statusLine() }}</p>
-        <button type="button" class="btn" (click)="state.persist('draft')">Save draft</button>
-        <button type="button" class="btn btn-primary" (click)="state.persist('submitted')">Submit</button>
-      </div>
+        </div>
+        <div class="month-picker">
+          <label class="form-label" for="month">Month</label>
+          <input
+            id="month"
+            class="form-control"
+            #monthInput
+            type="month"
+            [value]="state.month()"
+            (change)="onMonth($event)"
+          />
+        </div>
+        <div class="d-flex flex-wrap align-items-center gap-2 pb-1">
+          <span class="badge text-bg-light border" role="status">{{ state.statusLine() }}</span>
+          <button class="btn btn-outline-primary" type="button" (click)="state.persist('draft')">Save draft</button>
+          <button class="btn btn-primary" type="button" (click)="state.persist('submitted')">Submit</button>
+        </div>
       </div>
     </header>
 
     @if (state.pending()) {
-      <div class="pending" role="alert">
-        <p>This return has unsaved changes.</p>
-        <div>
-          <button type="button" class="btn btn-primary" (click)="state.saveAndContinue()">Save draft</button>
-          <button type="button" class="btn" (click)="state.discardPending()">Discard</button>
-          <button type="button" class="btn" (click)="keepEditing()">Keep editing</button>
-        </div>
+      <div class="alert alert-warning d-flex flex-wrap justify-content-between align-items-center gap-2" role="alert">
+        <span>This return has unsaved changes. Save them before you switch project or month.</span>
+        <span class="d-flex flex-wrap gap-2">
+          <button class="btn btn-primary btn-sm" type="button" (click)="state.saveAndContinue()">Save draft</button>
+          <button class="btn btn-outline-secondary btn-sm" type="button" (click)="state.discardPending()">Discard</button>
+          <button class="btn btn-outline-secondary btn-sm" type="button" (click)="keepEditing()">Keep editing</button>
+        </span>
       </div>
     }
 

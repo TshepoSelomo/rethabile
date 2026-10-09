@@ -1,36 +1,45 @@
-<section class="section" aria-labelledby="sec-fin">
-  <header>
-    <h2 id="sec-fin">Amounts for this month</h2>
-  </header>
-  <div class="fields">
-    <app-number-field
-      label="Approved budget (R)"
-      [value]="state.form().financials.approvedBudget"
-      (valueChange)="state.setFinancial('approvedBudget', $event)"
-    />
-    <app-number-field
-      label="Expenditure to date (R)"
-      [value]="state.form().financials.expenditureToDate"
-      (valueChange)="state.setFinancial('expenditureToDate', $event)"
-    />
-    <app-number-field
-      label="Expenditure this month (R)"
-      [value]="state.form().financials.expenditureThisMonth"
-      (valueChange)="state.setFinancial('expenditureThisMonth', $event)"
-    />
-    <app-number-field
-      label="Commitments (R)"
-      [value]="state.form().financials.commitments"
-      (valueChange)="state.setFinancial('commitments', $event)"
-    />
-    <app-number-field
-      label="Forecast to complete (R)"
-      [value]="state.form().financials.forecastToComplete"
-      (valueChange)="state.setFinancial('forecastToComplete', $event)"
-    />
-    <label class="field">
-      <span>Balance (budget − spend to date)</span>
-      <input readonly [value]="state.formatMoney(state.balance())" />
-    </label>
+<section class="card shadow-sm border-0" aria-labelledby="sec-fin">
+  <div class="card-body">
+    <h2 class="h5 card-title" id="sec-fin">Financial monthly</h2>
+    <p class="text-body-secondary">
+      {{ state.project().programme || 'No programme' }} · {{ state.period().label }}
+    </p>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <app-number-field
+          label="Monthly budget (R)"
+          [value]="state.form().financials.monthlyBudget"
+          (valueChange)="state.setFinancial('monthlyBudget', $event)"
+        />
+      </div>
+      <div class="col-md-6">
+        <app-number-field
+          label="Monthly baseline (R)"
+          [value]="state.form().financials.monthlyBaseline"
+          (valueChange)="state.setFinancial('monthlyBaseline', $event)"
+        />
+      </div>
+      <div class="col-md-6">
+        <app-number-field
+          label="Monthly expenditure (R)"
+          [value]="state.form().financials.monthlyExpenditure"
+          (valueChange)="state.setFinancial('monthlyExpenditure', $event)"
+        />
+      </div>
+      <div class="col-md-6">
+        <app-number-field
+          label="Monthly commitment (R)"
+          [value]="state.form().financials.monthlyCommitment"
+          (valueChange)="state.setFinancial('monthlyCommitment', $event)"
+        />
+      </div>
+      <div class="col-md-6">
+        <app-number-field
+          label="Monthly forecast (R)"
+          [value]="state.form().financials.monthlyForecast"
+          (valueChange)="state.setFinancial('monthlyForecast', $event)"
+        />
+      </div>
+    </div>
   </div>
 </section>

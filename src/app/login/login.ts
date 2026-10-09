@@ -60,6 +60,14 @@ export class Login {
     this.error.set('');
   }
 
+  protected useAccount(email: string, password: string) {
+    this.mode.set('sign-in');
+    this.email.set(email);
+    this.password.set(password);
+    this.error.set('');
+    this.notice.set('Account filled in. Press Sign in.');
+  }
+
   protected async onSignIn(event: Event) {
     event.preventDefault();
     this.error.set('');
