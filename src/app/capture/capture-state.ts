@@ -117,11 +117,10 @@ export class CaptureState {
   readonly searchResults = computed(() => {
     const query = this.projectQuery().trim().toLowerCase();
     if (!query) return [];
-    const compactQuery = query.replace(/\s+/g, '');
     return this.projects().filter((item) => {
       const name = item.name.toLowerCase();
-      const number = item.number.toLowerCase();
-      return name.includes(query) || number.includes(query) || number.replace(/\s+/g, '').includes(compactQuery);
+      const id = item.id.toLowerCase();
+      return name.includes(query) || id.includes(query);
     });
   });
   readonly statusLine = computed(() => {
